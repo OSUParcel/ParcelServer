@@ -10,7 +10,10 @@ Sophie Zhu
 
 API:
 
-<server>/createparcel?longitude=44.12345&latitude=-106.12345&clientid=1
+<server>/dropparcel?longitude=44.12345&latitude=-106.12345&groupid=1
+
+<server>/locateparcels
+<server>/locateparcels?groupid=#
 
 */
 
@@ -33,7 +36,7 @@ type Parcel struct {
 
 func init() {
     http.HandleFunc("/", root)
-	http.HandleFunc("/createparcel", createparcel)
+	http.HandleFunc("/dropparcel", dropparcel)
 	http.HandleFunc("/locateparcels", locateparcels)
 }
 
@@ -41,14 +44,17 @@ func root(w http.ResponseWriter, r *http.Request) {
     fmt.Fprint(w, "Server is running")
 }
 
-func createparcel(w http.ResponseWriter, r *http.Request) {
+func dropparcel(w http.ResponseWriter, r *http.Request) {
 	// Add a parcel to the datastore
 	newparcel := &Parcel{
 		Longitude: r.FormValue("longitude"), 
 		Latitude: r.FormValue("latitude"),
-		Groupid: r.FormValue("clientid"),
+		Groupid: r.FormValue("groupid"),
 		Active: true,
 		Date: time.Now(),
+	}
+	if newparcel.Groupid == "" {
+		newparcel.Groupid = "1"
 	}
 	
 	c := appengine.NewContext(r)
@@ -68,13 +74,13 @@ func locateparcels(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 	
 
-	clientid := r.FormValue("clientid")
-	if clientid == "" {
-		clientid = "1"
+	groupid := r.FormValue("groupid")
+	if groupid == "" {
+		groupid = "1"
 	}
 	
 
-	query := datastore.NewQuery("parcelobject").Ancestor(ParentKey(c)).Filter("Groupid =", clientid).Order("-Date").Limit(50)
+	query := datastore.NewQuery("parcelobject").Ancestor(ParentKey(c)).Filter("Groupid =", groupid).Order("-Date").Limit(50)
 	parcels := make([]Parcel, 0, 10)	// Ten most recent locations returned
 	if _, err := query.GetAll(c, &parcels); err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
