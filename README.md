@@ -11,7 +11,7 @@ Update the location of the parcel.
 
     <server>/dropparcel?longitude=44.12345&latitude=-106.12345
 
-Optionally specify a group (defaults to 1) and note:
+Optionally specify a group (defaults to 1) and/or note:
 
     <server>/dropparcel?longitude=44.12345&latitude=-106.12345&groupid=1&note=your_message_here
 
@@ -29,6 +29,6 @@ Start a new parcel.  This will remove the previous parcel in the group, along wi
 
     <server>/seedparcel?longitude=44.12345&latitude=-106.12345
 
-Optionally specify a group (defaults to 1) and note:
+Optionally specify a group (defaults to 1) and/or note:
 
     <server>/seedparcel?longitude=44.12345&latitude=-106.12345&groupid=1&note=your_message_here
