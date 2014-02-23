@@ -3,7 +3,7 @@ ParcelServer
 
 Google App Engine Server for Oregon State Google Hackathon 2014
 
-Add, update and list parcels using the HTTP GET API below.  All data is returned in JSON format.  Success returns [{"message":"success"}], failure returns [{"message":"failure"}], with the exception of locateparcels returning a JSON array upon success.
+Add, update and list parcels using the HTTP GET API below.  All data is returned in JSON format.  Success returns [{"message":"success"}], failure returns [{"message":"Error message"}], with the exception of locateparcels returning a JSON array upon success.
 ##API:
 
 ####dropparcel
