@@ -89,7 +89,7 @@ func dropparcel(w http.ResponseWriter, r *http.Request) {
 		
 		if mostrecent.Active == true {
 			// User needs to pick it up, first!
-			fmt.Fprint(w, "[{\"message\":\"failure\"}]")
+			fmt.Fprint(w, "[{\"message\":\"You need to pick up a parcel first!\"}]")
 			return
 		}
 	}
@@ -112,7 +112,7 @@ func dropparcel(w http.ResponseWriter, r *http.Request) {
 	key := datastore.NewIncompleteKey(c, "parcelobject", ParentKey(c))
     if _, err := datastore.Put(c, key, newparcel); err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
-		fmt.Fprint(w, "[{\"message\":\"failure\"}]")
+		fmt.Fprint(w, "[{\"message\":\"Failure while storing parcel in server\"}]")
 		return
     }
 	fmt.Fprint(w, "[{\"message\":\"success\"}]")
@@ -147,7 +147,7 @@ func pickupparcel(w http.ResponseWriter, r *http.Request) {
 		if !pickedup.Active {
 			// Parcel has already been picked up
 			c.Infof("Pick-up attempted when most recent parcel is already inactive")
-			fmt.Fprint(w, "[{\"message\":\"failure\"}]")
+			fmt.Fprint(w, "[{\"message\":\"This parcel has already been picked up.\"}]")
 			return
 		}
 		
@@ -186,7 +186,7 @@ func locateparcels(w http.ResponseWriter, r *http.Request) {
 	// Respond to the HTML request with JSON-formatted location data
 	if parcelbytes, err := json.Marshal(parcels); err != nil {
 		c.Infof("Oops - something went wrong with the JSON. \n")
-		fmt.Fprint(w, "[{\"message\":\"failure\"}]")
+		fmt.Fprint(w, "[{\"message\":\"JSON marshaling error\"}]")
 		return
 	} else {
 		fmt.Fprint(w, string(parcelbytes))	// Print parcel objects in date-descending order as a JSON array
